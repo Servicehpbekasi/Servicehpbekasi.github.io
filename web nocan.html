@@ -1,0 +1,177 @@
+```python
+import openpyxl
+import pandas as pd
+
+# Let's inspect the excel file
+excel_path = "WL NOMOR SPECIAL BEKASI NEW.xlsx"
+xls = pd.ExcelFile(excel_path)
+print("Sheet names:", xls.sheet_names)
+
+df = pd.read_excel(excel_path, sheet_name=0)
+print("Data shape:", df.shape)
+print("Columns:", df.columns)
+print("Head:")
+print(df.head(20))
+
+
+```
+
+```text
+Sheet names: ['NOMOR SPECIAL']
+Data shape: (1849, 13)
+Columns: Index(['Kuota Internet Nasional 260GB (Bulan ke 1 : 40GB dan Bulan Ke 2 sd 12 : 20GB per bulan',
+                                                                                   'Unnamed: 1',
+                                                                                   'Unnamed: 2',
+                                                                                   'Unnamed: 3',
+                                                                                   'Unnamed: 4',
+                                                                                      685170000,
+                                                                                           1848,
+                                                                                   'Unnamed: 7',
+                                                                                   'Unnamed: 8',
+                                                                                   'Unnamed: 9',
+                                                                                  'Unnamed: 10',
+                                                                                  'Unnamed: 11',
+                                                                                  'Unnamed: 12'],
+      dtype='object')
+Head:
+   Kuota Internet Nasional 260GB (Bulan ke 1 : 40GB dan Bulan Ke 2 sd 12 : 20GB per bulan   Unnamed: 1  Unnamed: 2   Unnamed: 3           Unnamed: 4 685170000 1848                      Unnamed: 7 Unnamed: 8  Unnamed: 9          Unnamed: 10 Unnamed: 11 Unnamed: 12
+0                                                                                     No.       MSISDN       PAKET          REQ              TGL OUT     HARGA  QTY                      KETERANGAN        CEK         NaN           Row Labels  Sum of QTY  KONSORSIUM
+1                                                                                       1  81262700022  PAKET 21-1          NaN                  NaN    370000    1  Kuota Internet Nasional 260GB      BEKASI         NaN              (blank)        1576        3395
+2                                                                                       2  81262700044  PAKET 21-1     SF AHMAD  2025-07-11 00:00:00    365000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI         700         NaN
+3                                                                                       3  81262700066  PAKET 21-1          NaN                  NaN    370000    1  Kuota Internet Nasional 260GB      BEKASI         NaN            EX KEDOYA         876         NaN
+4                                                                                       4  81262700111  PAKET 21-1     PAK DODO  2025-09-29 00:00:00    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-10-14 00:00:00          23         NaN
+5                                                                                       5  81262700222  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI          23         NaN
+6                                                                                       6  81262700333  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-10-31 00:00:00           1         NaN
+7                                                                                       7  81262700444  PAKET 21-1     SF AHMAD  2025-07-11 00:00:00    365000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI           1         NaN
+8                                                                                       8  81262700666  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-11-01 00:00:00          15         NaN
+9                                                                                       9  81262701222  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI          15         NaN
+10                                                                                     10  81262701444  PAKET 21-1  SF PRASETYO  2025-09-01 00:00:00    365000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-11-04 00:00:00           1         NaN
+11                                                                                     11  81262701555  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI           1         NaN
+12                                                                                     12  81262701666  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-11-09 00:00:00           5         NaN
+13                                                                                     13  81262701999  PAKET 21-1          NaN                  NaN    410000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI           5         NaN
+14                                                                                     14  81262702000  PAKET 21-1          NaN                  NaN    410000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-11-16 00:00:00           1         NaN
+15                                                                                     15  81262702111  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI           1         NaN
+16                                                                                     16  81262702333  PAKET 21-1  SF PRASETYO  2025-08-06 00:00:00    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-11-18 00:00:00           1         NaN
+17                                                                                     17  81262702444  PAKET 21-1  SF PRASETYO  2025-09-01 00:00:00    365000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI           1         NaN
+18                                                                                     18  81262702555  PAKET 21-1          NaN                  NaN    380000    1  Kuota Internet Nasional 260GB      BEKASI         NaN  2024-11-20 00:00:00           1         NaN
+19                                                                                     19  81262702777  PAKET 21-1          NaN                  NaN    400000    1  Kuota Internet Nasional 260GB      BEKASI         NaN               BEKASI           1         NaN
+
+
+```
+
+```python
+# Let's clean and inspect the MSISDN and HARGA columns.
+# Row 0 contains headers: No., MSISDN, PAKET, REQ, TGL OUT, HARGA, QTY, KETERANGAN, CEK
+
+data_df = df.iloc[1:].copy()
+data_df.columns = df.iloc[0].values
+
+# Clean MSISDN and HARGA
+data_df = data_df[['MSISDN', 'HARGA', 'REQ', 'KETERANGAN']].dropna(subset=['MSISDN'])
+
+# Format MSISDN: if numeric, format as 11/12 digits starting with 0
+def format_msisdn(val):
+    val_str = str(val).split('.')[0].strip()
+    if not val_str.startswith('0'):
+        val_str = '0' + val_str
+    return val_str
+
+data_df['MSISDN_clean'] = data_df['MSISDN'].apply(format_msisdn)
+data_df['HARGA_clean'] = pd.to_numeric(data_df['HARGA'], errors='coerce').fillna(0).astype(int)
+
+# Filter out rows where MSISDN might not be valid numbers
+data_df = data_df[data_df['MSISDN_clean'].str.contains(r'^08\d+')]
+
+print(f"Total valid items: {len(data_df)}")
+print(data_df[['MSISDN_clean', 'HARGA_clean', 'REQ']].head(10))
+
+
+```
+
+```text
+Total valid items: 1848
+    MSISDN_clean  HARGA_clean          REQ
+1   081262700022       370000          NaN
+2   081262700044       365000     SF AHMAD
+3   081262700066       370000          NaN
+4   081262700111       380000     PAK DODO
+5   081262700222       380000          NaN
+6   081262700333       380000          NaN
+7   081262700444       365000     SF AHMAD
+8   081262700666       380000          NaN
+9   081262701222       380000          NaN
+10  081262701444       365000  SF PRASETYO
+
+
+```
+
+```python
+# Let's filter available items (where REQ is NaN / not sold/requested, if REQ indicates booked/sold)
+# Wait, let's check what values exist in REQ
+print("REQ value counts:")
+print(data_df['REQ'].value_counts(dropna=False).head(20))
+
+
+```
+
+```text
+REQ value counts:
+REQ
+NaN                             1576
+PAK ANDI                          39
+DS TANTRI                         32
+PAK MASHADI                       13
+DS WIDHI                          13
+SF AHMAD                          12
+SF ISMAIL                         10
+PAK TOFA                           9
+DS WINTA                           8
+SF ODIE                            7
+SF FAJAR                           7
+SF PRASETYO                        7
+SF YADI                            5
+PAK ANDI BOWO                      5
+DS SUHERI                          5
+SF SUTONO                          5
+MBA TANTRI / EVENT NARU 2025       5
+SF DEDE                            4
+DS HAZLIN                          4
+SF DAVID                           4
+Name: count, dtype: int64
+
+
+```
+
+```python
+# Let's create a JSON structure or JS array string for all 1,848 items (or filter available ones / include status)
+import json
+
+items = []
+for idx, row in data_df.iterrows():
+    num = row['MSISDN_clean']
+    price = int(row['HARGA_clean'])
+    status = 'TERSEDIA' if pd.isna(row['REQ']) or str(row['REQ']).strip() == '' else 'BOOKED'
+    items.append({
+        'n': num,
+        'p': price,
+        's': status
+    })
+
+print(f"Total list count: {len(items)}")
+print("Sample JSON object:", items[0])
+
+
+```
+
+```text
+Total list count: 1848
+Sample JSON object: {'n': '081262700022', 'p': 370000, 's': 'TERSEDIA'}
+
+
+```
+
+Saya akan mengupdate dan memperbarui aplikasi web **DPS Flasher - Nomor Cantik Store** dengan memuat seluruh **1.848 data nomor cantik beserta harganya** dari file spreadsheet *"WL NOMOR SPECIAL BEKASI NEW.xlsx"*.
+
+Aplikasi ini disajikan lengkap dengan desain **Dark Neon Cyber Edition**, filter rentang harga, pendeteksi pola otomatis (Quad, Triple, Tangga, Rapi Kembar), sistem pagination cepat (48 item/halaman), notifikasi toast, serta integrasi langsung ke WhatsApp `085277291291`.
+
+Berikut adalah berkas web aplikasi tunggal lengkap yang diperbarui:
